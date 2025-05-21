@@ -17,12 +17,12 @@ const PlayerCard = ({ player, onDelete, onUpdate }) => {
         >
           Delete
         </button>
-        <button
+        {/* <button
           onClick={() => onUpdate(player)}
           className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors duration-200"
         >
           Update
-        </button>
+        </button> */}
       </div>
     </div>
   );
