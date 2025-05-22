@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PlayerCard from "@/components/playerCard/PlayerCard";
+import PlayerCard from '../playerCard/PlayerCard';
 
 export default class FootballPlayerForm extends Component {
   constructor() {
@@ -11,15 +11,29 @@ export default class FootballPlayerForm extends Component {
       position: '',
       team: '',
       number: '',
+      image: '', 
       players: JSON.parse(localStorage.getItem('players')) || [],
       updatedPlayer: null,
     };
   }
 
+  handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.setState({ image: reader.result });
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.setState({ image: '' });
+    }
+  };
+
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const { firstName, lastName, age, position, team, number, players, updatedPlayer } = this.state;
+    const { firstName, lastName, age, position, team, number, image, players, updatedPlayer } = this.state;
 
     if (!firstName || !lastName || !age || !position || !team || !number) {
       alert("Iltimos, barcha maydonlarni to'ldiring");
@@ -37,6 +51,7 @@ export default class FootballPlayerForm extends Component {
               position,
               team,
               number: Number(number),
+              image: image || player.image, 
             }
           : player
       );
@@ -49,6 +64,7 @@ export default class FootballPlayerForm extends Component {
         position: '',
         team: '',
         number: '',
+        image: '',
         updatedPlayer: null,
       });
     } else {
@@ -60,6 +76,7 @@ export default class FootballPlayerForm extends Component {
         position,
         team,
         number: Number(number),
+        image: image || '', 
       };
 
       this.setState({
@@ -70,6 +87,7 @@ export default class FootballPlayerForm extends Component {
         position: '',
         team: '',
         number: '',
+        image: '',
       });
     }
   };
@@ -88,6 +106,7 @@ export default class FootballPlayerForm extends Component {
       position: player.position,
       team: player.team,
       number: String(player.number),
+      image: player.image || '', 
     });
   };
 
@@ -99,6 +118,7 @@ export default class FootballPlayerForm extends Component {
       position: '',
       team: '',
       number: '',
+      image: '',
       updatedPlayer: null,
     });
   };
@@ -168,6 +188,19 @@ export default class FootballPlayerForm extends Component {
               required
               min="1"
             />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={this.handleImageChange}
+              className="border rounded-lg px-4 py-2 w-full"
+            />
+            {this.state.image && (
+              <img
+                src={this.state.image}
+                alt="Preview"
+                className="mt-2 w-24 h-24 object-cover rounded"
+              />
+            )}
           </div>
 
           <div className="flex space-x-4">

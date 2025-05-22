@@ -3,6 +3,13 @@ import React from 'react';
 const PlayerCard = ({ player, onDelete, onUpdate }) => {
   return (
     <div className="bg-gray-50 p-4 rounded-lg shadow">
+      {player.image && (
+        <img
+          src={player.image}
+          alt={`${player.firstName} ${player.lastName}`}
+          className="w-24 h-24 object-cover rounded mb-2"
+        />
+      )}
       <h3 className="text-lg font-semibold">
         {player.firstName} {player.lastName}
       </h3>
