@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PlayerCard from '../playerCard/PlayerCard';
+import PlayerCard from '@/components/playerCard/PlayerCard';
 
 export default class FootballPlayerForm extends Component {
   constructor() {
