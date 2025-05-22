@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
-import PlayerCard from '../playerCard/PlayerCard';
+import PlayerCard from "@/components/playerCard/PlayerCard";
 
 export default class FootballPlayerForm extends Component {
   constructor() {
     super();
     this.state = {
-      firstName: "",
-      lastName: "",
-      age: "",
-      position: "",
-      team: "",
-      number: "",
-      players: JSON.parse(localStorage.getItem("players")) || [],
-      updatedPlayer: null
+      firstName: '',
+      lastName: '',
+      age: '',
+      position: '',
+      team: '',
+      number: '',
+      players: JSON.parse(localStorage.getItem('players')) || [],
+      updatedPlayer: null,
     };
   }
 
@@ -21,73 +21,100 @@ export default class FootballPlayerForm extends Component {
 
     const { firstName, lastName, age, position, team, number, players, updatedPlayer } = this.state;
 
-    if (updatedPlayer) {
+    if (!firstName || !lastName || !age || !position || !team || !number) {
+      alert("Iltimos, barcha maydonlarni to'ldiring");
+      return;
+    }
 
-      const updatedPlayers = players.map(player =>
+    if (updatedPlayer) {
+      const updatedPlayers = players.map((player) =>
         player.id === updatedPlayer.id
-          ? { ...player, firstName, lastName, age, position, team, number }
+          ? {
+              ...player,
+              firstName,
+              lastName,
+              age: Number(age),
+              position,
+              team,
+              number: Number(number),
+            }
           : player
       );
 
       this.setState({
         players: updatedPlayers,
-        firstName: "",
-        lastName: "",
-        age: "",
-        position: "",
-        team: "",
-        number: "",
-        updatedPlayer: null
+        firstName: '',
+        lastName: '',
+        age: '',
+        position: '',
+        team: '',
+        number: '',
+        updatedPlayer: null,
       });
     } else {
-
       const newPlayer = {
         id: new Date().getTime(),
         firstName,
         lastName,
-        age,
+        age: Number(age),
         position,
         team,
-        number
+        number: Number(number),
       };
 
       this.setState({
         players: [...players, newPlayer],
-        firstName: "",
-        lastName: "",
-        age: "",
-        position: "",
-        team: "",
-        number: ""
+        firstName: '',
+        lastName: '',
+        age: '',
+        position: '',
+        team: '',
+        number: '',
       });
     }
   };
 
   handleDelete = (id) => {
-    const updated = this.state.players.filter(player => player.id !== id);
-    this.setState({ players: updated });
+    const updatedPlayers = this.state.players.filter((player) => player.id !== id);
+    this.setState({ players: updatedPlayers, updatedPlayer: null });
+  };
+
+  handleUpdate = (player) => {
+    this.setState({
+      updatedPlayer: player,
+      firstName: player.firstName,
+      lastName: player.lastName,
+      age: String(player.age),
+      position: player.position,
+      team: player.team,
+      number: String(player.number),
+    });
+  };
+
+  handleCancel = () => {
+    this.setState({
+      firstName: '',
+      lastName: '',
+      age: '',
+      position: '',
+      team: '',
+      number: '',
+      updatedPlayer: null,
+    });
   };
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.players !== this.state.players) {
-      localStorage.setItem("players", JSON.stringify(this.state.players));
-    }
-
-    if (
-      prevState.updatedPlayer !== this.state.updatedPlayer &&
-      this.state.updatedPlayer
-    ) {
-      const { firstName, lastName, age, position, team, number } = this.state.updatedPlayer;
-      this.setState({ firstName, lastName, age, position, team, number });
+      localStorage.setItem('players', JSON.stringify(this.state.players));
     }
   }
 
   render() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-        <form onSubmit={this.handleSubmit} className="bg-white shadow-lg rounded-xl p-6 w-full max-w-2xl space-y-4">
+        <div className="bg-white shadow-lg rounded-xl p-6 w-full max-w-2xl space-y-4">
           <h2 className="text-2xl font-bold text-center text-gray-700">
-            {this.state.updatedPlayer ? "Futbolchini Yangilash" : "Futbolchi Qo‘shish"}
+            {this.state.updatedPlayer ? 'Futbolchini Yangilash' : "Futbolchi Qo'shish"}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -114,6 +141,7 @@ export default class FootballPlayerForm extends Component {
               placeholder="Yosh"
               className="border rounded-lg px-4 py-2 w-full"
               required
+              min="1"
             />
             <input
               value={this.state.position}
@@ -138,27 +166,40 @@ export default class FootballPlayerForm extends Component {
               placeholder="Raqami"
               className="border rounded-lg px-4 py-2 w-full"
               required
+              min="1"
             />
           </div>
 
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg w-full"
-          >
-            {this.state.updatedPlayer ? "Yangilash" : "Qo'shish"}
-          </button>
+          <div className="flex space-x-4">
+            <button
+              type="button"
+              onClick={this.handleSubmit}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg w-full"
+            >
+              {this.state.updatedPlayer ? 'Yangilash' : "Qo'shish"}
+            </button>
+            {this.state.updatedPlayer && (
+              <button
+                type="button"
+                onClick={this.handleCancel}
+                className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg w-full"
+              >
+                Bekor qilish
+              </button>
+            )}
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-4">
-            {this.state.players.map(player => (
+            {this.state.players.map((player) => (
               <PlayerCard
                 key={player.id}
                 player={player}
                 onDelete={this.handleDelete}
-                onUpdate={(p) => this.setState({ updatedPlayer: p })}
+                onUpdate={this.handleUpdate}
               />
             ))}
           </div>
-        </form>
+        </div>
       </div>
     );
   }

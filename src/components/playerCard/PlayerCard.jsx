@@ -1,28 +1,28 @@
-import React from "react";
+import React from 'react';
 
 const PlayerCard = ({ player, onDelete, onUpdate }) => {
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 max-w-sm">
-      <h1 className="text-xl font-semibold text-gray-900 mb-2">
+    <div className="bg-gray-50 p-4 rounded-lg shadow">
+      <h3 className="text-lg font-semibold">
         {player.firstName} {player.lastName}
-      </h1>
-      <p className="text-sm text-gray-600 mb-1">Yosh: {player.age}</p>
-      <p className="text-sm text-gray-600 mb-1">Pozitsiya: {player.position}</p>
-      <p className="text-sm text-gray-600 mb-1">Jamoa: {player.team}</p>
-      <p className="text-sm text-gray-600 mb-4">Raqam: {player.number}</p>
-      <div className="flex justify-between items-center">
+      </h3>
+      <p>Yosh: {player.age}</p>
+      <p>Pozitsiya: {player.position}</p>
+      <p>Jamoa: {player.team}</p>
+      <p>Raqami: {player.number}</p>
+      <div className="flex space-x-2 mt-2">
+        <button
+          onClick={() => onUpdate(player)}
+          className="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-3 rounded"
+        >
+          Yangilash
+        </button>
         <button
           onClick={() => onDelete(player.id)}
-          className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 transition-colors duration-200"
+          className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded"
         >
-          Delete
+          O'chirish
         </button>
-        {/* <button
-          onClick={() => onUpdate(player)}
-          className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors duration-200"
-        >
-          Update
-        </button> */}
       </div>
     </div>
   );
